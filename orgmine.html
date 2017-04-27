@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<!-- 2017-04-26 Wed 17:32 -->
+<meta  charset="utf-8" />
+<meta  htto-equiv="X-UA-Compatible" content="chrome=1" />
+<meta  name="generator" content="Org-mode with org-ioslide" />
+
+
+
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--This one seems to work all the time, but really small on ipad-->
+<!--<meta name="viewport" content="initial-scale=0.4">-->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<link rel="stylesheet" media="all" href="theme/css/default.css" />
+<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css" />
+<link rel="stylesheet" media="all" href="theme/css/small-icon.css" />
+<base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+<script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+
+   <script src="js/jquery-1.7.1.min.js" type="text/javascript"></script>
+
+<script src="js/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,local/local" type="text/javascript"></script>
+</head>
+<body style="opacity: 0">
+<slides class="layout-widescreen">
+<slide class="title-slide segue nobackground">
+       <aside class="gdbar"><img src="images/emacs-icon.png"></aside>
+       <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+       <hgroup class="auto-fadein">
+         <h1 data-config-title><!-- populated from slide_config.json --></h1>
+         <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+         <p data-config-presenter><!-- populated from slide_config.json --></p>
+       </hgroup>
+    </slide>
+
+<slide id="sec-" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/emacs-icon.png"></aside><hgroup class="">
+       <h2 class=" "><div id="outline-container-org2ca6218" class="outline-2">
+<h2 id="org2ca6218">Installation</h2>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-">
+
+
+</article>
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org65bb88c" class="outline-3">
+<h3 id="org65bb88c">Download</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>目前沒有在 melpa 上</li>
+<li>spacemacs layer</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="elisp">
+(orgmine :location (recipe
+                    :fetcher github
+                    :repo "kametoku/orgmine"))
+</pre>
+
+</div>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org4a721e6" class="outline-3">
+<h3 id="org4a721e6">Global Configuare &#x2013; tag config</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="elisp">
+(setq orgmine-tags '((update-me . "UPDATE_ME")
+                     (create-me . "CREATE_ME")
+                     (refile-me . "REFILE_ME")
+                     (project . "project")
+                     (tracker . "tracker")
+                     (versions . "versions")
+                     (version . "version")
+                     (issue . "issue")
+                     (description . "description")
+                     (journals . "journals")
+                     (journal . "journal")
+                     (attachments . "attachments")
+                     (wiki . "wiki")))
+</pre>
+
+</div>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org8992d1e" class="outline-3">
+<h3 id="org8992d1e">Global Configuare &#x2013; redmine server config</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li><code>${id}</code> : issue id</li>
+<li><code>${subjcet}</code> : issue subject</li>
+<li><code>${count}</code> : journal serial number</li>
+<li><code>${author}</code></li>
+<li><code>${created_on}</code></li>
+<li><code>${name}</code> : user id</li>
+<li><code>${firstname}</code></li>
+<li><code>${lastname}</code></li>
+<li><code>${identifier}</code></li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org1052b1c" class="outline-3">
+<h3 id="org1052b1c">Global Configuare &#x2013; redmine server config</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="elisp">
+;; my redmine config
+(setq orgmine-servers
+      '(("demo" ;; om_server name
+         (host . "http://localhost:10082") ;; must
+         (api-key . "c1baa236cc0fbdbb5ac42171560b712bade517c6") ;; must
+         (issue-title-format . "[[redmine:issues/%{id}][#%{id}]] %{subject}")
+         (journal-title-format . (concat
+                                  "[[redmine:issues/%{id}#note-%{count}][J#%{count}]]"
+                                  " %{author}@%{created_on}"))
+         (version-title-format . (concat
+                                  "[[redmine:versions/%{id}][V#%{id}]]"
+                                  " %{name}"))
+         (tracker-title-format . "%{name}")
+         (project-title-format . (concat
+                                  "[[redmine:projects/%{identifier}][%{identifier}]]"
+                                  " %{name}"))
+         (user-name-format . "%{firstname} %{lastname}"))))
+</pre>
+
+</div>
+
+
+</article>
+
+</slide>
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orga6cd9bd" class="outline-3">
+<h3 id="orga6cd9bd">File Configuration</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<p>
+為了要使用 orgmine 產生 org file property 的功能，這兩行 PROPERTY 必需先加:
+</p>
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="org">
+#+PROPERTY: om_server demo
+#+PROPERTY: om_project 1
+</pre>
+
+</div>
+
+<p>
+接著才 M-x orgmine-insert-template
+</p>
+<pre class="example">
+#+SEQ_TODO: New InProgress Feedback | Closed Resolved Rejected
+#+PROPERTY: om_server demo
+#+PROPERTY: om_project 1:orgmine
+#+PROPERTY: om_status_ALL 1:New 2:Closed 3:InProgress 4:Feedback 5:Resolved 6:Rejected opne locked closed
+#+PROPERTY: om_trackers_ALL
+#+PROPERTY: om_assigned_to_ALL 1:Redmine\ Admin 5:hpy\ s
+#+PROPERTY: om_done_ration_ALL 0 10 20 30 40 50 60 70 80 90 100
+</pre>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orge64ba4c" class="outline-3">
+<h3 id="orge64ba4c">File Configuration (II)</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="org">
+#+PROPERTY: om_me 5:hpy
+#+PROPERTY: om_default_todo New
+</pre>
+
+</div>
+
+
+</article>
+
+</slide>
+
+</slide>
+
+</slide>
+<slide id="sec-" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/emacs-icon.png"></aside><hgroup class="">
+       <h2 class=" "><div id="outline-container-org9406b79" class="outline-2">
+<h2 id="org9406b79">Usage</h2>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-">
+
+
+</article>
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org5caf43c" class="outline-3">
+<h3 id="org5caf43c">Create a new issue</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>M-x orgmine-add-issue</li>
+</ul>
+
+<article class="flexbox vcenter">
+
+<div class="figure">
+<p><img src="new_issue.png" alt="new_issue.png" height="150px" />
+</p>
+</div>
+</article>
+
+
+</article>
+
+</slide>
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org28ca1a4" class="outline-3">
+<h3 id="org28ca1a4">Fetch an existing</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>M-x orgmine-insert-issue</li>
+</ul>
+
+<article class="flexbox vcenter">
+
+<div class="figure">
+<p><img src="insert_issue.png" alt="insert_issue.png" height="150px" />
+</p>
+</div>
+</article>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orgbdf8ffe" class="outline-3">
+<h3 id="orgbdf8ffe">Edit the issue property</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>orgmine-set-entry-property</li>
+</ul>
+
+<article class="flexbox vcenter">
+
+<div class="figure">
+<p><img src="set_property.png" alt="set_property.png" height="300px" />
+</p>
+</div>
+</article>
+
+
+</article>
+
+</slide>
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orgef4ee85" class="outline-3">
+<h3 id="orgef4ee85">Add a Description</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>M-x orgmine-add-description</li>
+</ul>
+
+<article class="flexbox vcenter">
+
+<div class="figure">
+<p><img src="insert_description.png" alt="insert_description.png" height="100px" />
+</p>
+</div>
+</article>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org35dd584" class="outline-3">
+<h3 id="org35dd584">Add a journal</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>M-x orgmnie-add-journal</li>
+</ul>
+
+<p>
+journal 在 submit 後會自動集中到 Journals 的 headline 下。
+</p>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orgba011b8" class="outline-3">
+<h3 id="orgba011b8">Schedule and Deadline</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>M-x org-schedule</li>
+<li>M-x org-deadline</li>
+</ul>
+
+<p>
+p.s. 完成率是 headline 的 property
+</p>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orgb924214" class="outline-3">
+<h3 id="orgb924214">Submit issue</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>M-x orgmine-submit</li>
+<li>M-x orgmine-submit-issue</li>
+<li>M-x orgmine-submit-issue-region</li>
+</ul>
+
+<p>
+3 個都一樣要 cursor 在 issue headline 下才有用，沒什麼差別
+</p>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org74b9769" class="outline-3">
+<h3 id="org74b9769">Sync Issue</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>M-x orgmine-sync-buffer</li>
+<li>M-x orgmine-sync-subtree</li>
+<li>M-x orgmine-sync-subtree-recursively</li>
+</ul>
+
+<p>
+p.s. 每個 issue 在同一個檔案只會出現一次，sync 時若有重覆的會 retrieved
+</p>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org5c7a795" class="outline-3">
+<h3 id="org5c7a795">Subtree management</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>Project subtree</li>
+<li><p>
+Track subtree
+</p>
+<pre class="example">
+M-x orgmine-insert-tracker
+M-x orgmine-sync-subtree-recursively
+</pre></li>
+<li><p>
+Version subtree
+</p>
+<pre class="example">
+M-x orgmine-insert-version
+M-x orgmine-sync-subtree-recursivele
+</pre></li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org54b30f0" class="outline-3">
+<h3 id="org54b30f0">Others</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<p>
+M-x orgmine-show-______
+</p>
+
+
+</article>
+
+</slide>
+
+</slide>
+
+</slide>
+<slide id="sec-" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/emacs-icon.png"></aside><hgroup class="">
+       <h2 class=" "><div id="outline-container-org0d5e08f" class="outline-2">
+<h2 id="org0d5e08f">Features</h2>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-">
+
+
+</article>
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orgd2d46ed" class="outline-3">
+<h3 id="orgd2d46ed">It's not a bug, it's a feature.</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>Description 不會加 <code>UPDATE_ME</code> 的 tag，需自己加。</li>
+<li><p>
+orgmine-insert-template 產生的錯字要改:
+</p>
+<pre class="example">
+=om_trackers_ALL= -&gt; =om_tracker_ALL=
+</pre></li>
+<li>attachments 目前我試了還無法傳檔案</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orgbf1b28a" class="outline-3">
+<h3 id="orgbf1b28a">Not supported</h3>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>Wiki
+<ul>
+<li>在 org 上寫好用 ox-textile 轉出 textile (但別人打的就&#x2026;)</li>
+</ul></li>
+<li>News
+<ul>
+<li>用網頁</li>
+</ul></li>
+<li>Documents
+<ul>
+<li>用網頁</li>
+</ul></li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+
+</slide>
+<slide id="sec-" class=" thank-you-slide segue nobackground" style="background-image: url(nil)">
+<aside class="gdbar right"><img src="images/emacs-icon.png"></aside><article class="flexbox vleft auto-fadein" id="text-">
+<h2>
+  <p>Demo</p>
+</h2>
+<br>
+<p class="auto-fadein" data-config-contact>
+</p>
+</article>
+
+</slide>
+<slide class="backdrop"></slide>
+</slides>
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+
+</html>

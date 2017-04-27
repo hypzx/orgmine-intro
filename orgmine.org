@@ -1,0 +1,214 @@
+#+TITLE: Orgmine 介紹
+#+SUBTITLE:
+#+DATE: <2017-04-26 Wed>
+#+AUTHOR:
+#+EMAIL:
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
+#+OPTIONS: e:t email:nil f:t inline:t num:nil p:nil pri:nil stat:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:nil todo:t |:t
+#+CREATOR: Emacs 24.4.1 (Org mode 8.2.10)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+
+#+FAVICON: images/org-icon.png
+#+ICON: images/emacs-icon.png
+#+HASHTAG:
+
+* Installation
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+** Download
+   - 目前沒有在 melpa 上
+   - spacemacs layer
+   #+BEGIN_SRC elisp
+     (orgmine :location (recipe
+                         :fetcher github
+                         :repo "kametoku/orgmine"))
+   #+END_SRC
+
+** Global Configuare -- tag config
+   #+BEGIN_SRC elisp
+     (setq orgmine-tags '((update-me . "UPDATE_ME")
+                          (create-me . "CREATE_ME")
+                          (refile-me . "REFILE_ME")
+                          (project . "project")
+                          (tracker . "tracker")
+                          (versions . "versions")
+                          (version . "version")
+                          (issue . "issue")
+                          (description . "description")
+                          (journals . "journals")
+                          (journal . "journal")
+                          (attachments . "attachments")
+                          (wiki . "wiki")))
+   #+END_SRC
+
+** Global Configuare -- redmine server config
+   - =${id}= : issue id
+   - =${subjcet}= : issue subject
+   - =${count}= : journal serial number
+   - =${author}=
+   - =${created_on}=
+   - =${name}= : user id
+   - =${firstname}=
+   - =${lastname}=
+   - =${identifier}=
+
+** Global Configuare -- redmine server config
+   #+BEGIN_SRC elisp
+     ;; my redmine config
+     (setq orgmine-servers
+           '(("demo" ;; om_server name
+              (host . "http://localhost:10082") ;; must
+              (api-key . "c1baa236cc0fbdbb5ac42171560b712bade517c6") ;; must
+              (issue-title-format . "[[redmine:issues/%{id}][#%{id}]] %{subject}")
+              (journal-title-format . (concat
+                                       "[[redmine:issues/%{id}#note-%{count}][J#%{count}]]"
+                                       " %{author}@%{created_on}"))
+              (version-title-format . (concat
+                                       "[[redmine:versions/%{id}][V#%{id}]]"
+                                       " %{name}"))
+              (tracker-title-format . "%{name}")
+              (project-title-format . (concat
+                                       "[[redmine:projects/%{identifier}][%{identifier}]]"
+                                       " %{name}"))
+              (user-name-format . "%{firstname} %{lastname}"))))
+   #+END_SRC
+** File Configuration
+
+   為了要使用 orgmine 產生 org file property 的功能，
+   這兩行 PROPERTY 必需先加:
+   #+BEGIN_SRC org
+     ,#+PROPERTY: om_server demo
+     ,#+PROPERTY: om_project 1
+   #+END_SRC
+
+   接著才 M-x orgmine-insert-template
+   #+BEGIN_EXAMPLE org
+     ,#+SEQ_TODO: New InProgress Feedback | Closed Resolved Rejected
+     ,#+PROPERTY: om_server demo
+     ,#+PROPERTY: om_project 1:orgmine
+     ,#+PROPERTY: om_status_ALL 1:New 2:Closed 3:InProgress 4:Feedback 5:Resolved 6:Rejected opne locked closed
+     ,#+PROPERTY: om_trackers_ALL
+     ,#+PROPERTY: om_assigned_to_ALL 1:Redmine\ Admin 5:hpy\ s
+     ,#+PROPERTY: om_done_ration_ALL 0 10 20 30 40 50 60 70 80 90 100
+   #+END_EXAMPLE
+
+** File Configuration (II)
+   #+BEGIN_SRC org
+     ,#+PROPERTY: om_me 5:hpy
+     ,#+PROPERTY: om_default_todo New
+   #+END_SRC
+
+* Usage
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+** Create a new issue
+   - M-x orgmine-add-issue
+
+   #+BEGIN_CENTER
+   #+ATTR_HTML: :height 150px
+   [[file:new_issue.png]]
+   #+END_CENTER
+** Fetch an existing
+   - M-x orgmine-insert-issue
+
+   #+BEGIN_CENTER
+   #+ATTR_HTML: :height 150px
+   [[file:insert_issue.png]]
+   #+END_CENTER
+
+** Edit the issue property
+   - orgmine-set-entry-property
+
+   #+BEGIN_CENTER
+   #+ATTR_HTML: :height 300px
+   [[file:set_property.png]]
+   #+END_CENTER
+** Add a Description
+   - M-x orgmine-add-description
+
+   #+BEGIN_CENTER
+   #+ATTR_HTML: :height 100px
+   [[file:insert_description.png]]
+   #+END_CENTER
+
+** Add a journal
+   - M-x orgmnie-add-journal
+
+   journal 在 submit 後會自動集中到 Journals 的 headline 下。
+
+** Schedule and Deadline
+   - M-x org-schedule
+   - M-x org-deadline
+
+   p.s. 完成率是 headline 的 property
+
+** Submit issue
+   - M-x orgmine-submit
+   - M-x orgmine-submit-issue
+   - M-x orgmine-submit-issue-region
+
+   3 個都一樣要 cursor 在 issue headline 下才有用，沒什麼差別
+
+** Sync Issue
+   - M-x orgmine-sync-buffer
+   - M-x orgmine-sync-subtree
+   - M-x orgmine-sync-subtree-recursively
+
+   p.s. 每個 issue 在同一個檔案只會出現一次，sync 時若有重覆的會 retrieved
+
+** Subtree management
+   - Project subtree
+   - Track subtree
+     #+BEGIN_EXAMPLE
+       M-x orgmine-insert-tracker
+       M-x orgmine-sync-subtree-recursively
+     #+END_EXAMPLE
+   - Version subtree
+     #+BEGIN_EXAMPLE
+       M-x orgmine-insert-version
+       M-x orgmine-sync-subtree-recursivele
+     #+END_EXAMPLE
+
+** Others
+   M-x orgmine-show-______
+
+* Features
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+** It's not a bug, it's a feature.
+   - Description 不會加 =UPDATE_ME= 的 tag，需自己加。
+   - orgmine-insert-template 產生的錯字要改:
+     #+BEGIN_EXAMPLE
+       =om_trackers_ALL= -> =om_tracker_ALL=
+     #+END_EXAMPLE
+   - attachments 目前我試了還無法傳檔案
+
+** Not supported
+   - Wiki
+     + 在 org 上寫好用 ox-textile 轉出 textile (但別人打的就...)
+   - News
+     + 用網頁
+   - Documents
+     + 用網頁
+
+* Demo
+  :PROPERTIES:
+  :SLIDE:    thank-you-slide segue
+  :ASIDE:    right
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
